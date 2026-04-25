@@ -61,7 +61,7 @@
         </button>
         <div class="dropdown-menu dropdown-menu-end topbar-dropdown">
           <div class="dropdown-header"><strong>{{ Auth::user()->name }} </strong><small></small></div>
-          <a class="dropdown-item-custom" href="#" data-section="profile">
+          <a class="dropdown-item-custom" href="{{ route('profile.edit') }}">
             <div class="notif-icon n-blue"><i class="fas fa-user-circle"></i></div>
             <div class="notif-text"><strong>My Profile</strong><p>Manage your profile</p></div>
           </a>

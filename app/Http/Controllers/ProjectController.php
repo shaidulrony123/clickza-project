@@ -14,14 +14,14 @@ class ProjectController extends Controller
     }
     // project list
     public function ProjectList()
-{
+    {
     $projects = Project::with('category')->latest()->get();
 
     return response()->json([
         'status' => 'success',
         'rows' => $projects
     ]);
-}
+    }
     // project create
     public function ProjectCreate(Request $request)
 {

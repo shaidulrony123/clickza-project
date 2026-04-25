@@ -243,7 +243,7 @@ a{text-decoration:none;color:inherit}
 
 /* ── ABOUT ── */
 .about-section{background:var(--bg)}
-.about-img-wrap{position:relative;width:100%;max-width:400px;margin:0 auto}
+.about-img-wrap{position:relative;width:100%;max-width:510px;margin:0 auto}
 .about-img-bg{width:100%;padding-top:100%;background:linear-gradient(135deg,rgba(0,229,255,.08),rgba(123,97,255,.08));border:1px solid var(--border);border-radius:24px}
 .about-img-inner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--accent);opacity:.7}
 .exp-badge{position:absolute;bottom:-20px;right:-20px;background:var(--accent);color:var(--bg);padding:16px 24px;border-radius:16px;text-align:center;box-shadow:0 0 30px rgba(0,229,255,.3)}
@@ -605,8 +605,8 @@ a{text-decoration:none;color:inherit}
 }
 
 #about_image_front{
-  width: 400px !important;
-  height: 400px;
+  width: 510px !important;
+  height: 510px;
   border-radius: 20px;
   
 }

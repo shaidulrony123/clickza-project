@@ -48,6 +48,15 @@
         <a href="{{ route('product.section') }}" class="sidebar-link">
             <i class="fas fa-box-open"></i><span>Product Section</span>
         </a>
+        <a href="{{ route('visitor.section') }}" class="sidebar-link">
+            <i class="fas fa-box-open"></i><span>Visitor Section</span>
+        </a>
+        <a href="{{ route('clientsource.section') }}" class="sidebar-link">
+            <i class="fas fa-users"></i><span>Client Source</span>
+        </a>
+        <a href="{{ route('invoice.section') }}" class="sidebar-link">
+            <i class="fas fa-file-invoice-dollar"></i><span>Invoices</span>
+        </a>
         <a class="sidebar-link sidebar-dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#navMessages">
             <i class="fas fa-envelope"></i><span>Messages</span>
             <span class="badge-count new ms-auto me-1">3</span>
@@ -74,8 +83,8 @@
             <i class="fas fa-chevron-down nav-arrow ms-auto"></i>
         </a>
         <div class="collapse sidebar-sub" id="navSettings">
-            <a href="#" class="sidebar-sub-link" data-section="profile" data-bs-dismiss="offcanvas">
-                <i class="fas fa-user-circle"></i> Profile
+            <a href="{{ route('profile.edit') }}" class="sidebar-sub-link">
+                <i class="fas fa-user-circle"></i> Profile Settings
             </a>
 
             <a href="{{ route('settings.section') }}" class="sidebar-sub-link">

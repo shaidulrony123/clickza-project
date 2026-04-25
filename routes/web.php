@@ -13,6 +13,10 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CompleteProjectListUrlController;
 use App\Http\Controllers\TodolistController;
+use App\Http\Controllers\VisitController;
+use App\Http\Controllers\HandnoteController;
+use App\Http\Controllers\ClientsourceController;
+use App\Http\Controllers\InvoiceController;
 
 
 Route::get('/', function () {
@@ -25,6 +29,7 @@ Route::get('/', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+    Route::get('/visitor-dashboard', [VisitController::class, 'visitDashboard'])->name('visitor.section');
 // Route::get('/dashboard-page', [DashboardController::class, 'Dashboard'])
 //     ->middleware(['auth', 'verified'])
 //     ->name('dashboard.page');
@@ -96,6 +101,32 @@ Route::middleware('auth')->group(function () {
     Route::post("/todolist-by-id", [TodolistController::class, 'TodolistById']);
     Route::post("/todolist-update", [TodolistController::class, 'TodolistUpdate']);
     Route::post("/todolist-delete", [TodolistController::class, 'TodolistDelete']);
+
+    // handnote section route
+    Route::get("/handnote-section", [HandnoteController::class, 'HandnoteSection'])->name('handnote.section');
+    Route::get("/handnote-list", [HandnoteController::class, 'HandnoteList']);
+    Route::post("/handnote-create", [HandnoteController::class, 'HandnoteCreate']);
+    Route::post("/handnote-by-id", [HandnoteController::class, 'HandnoteById']);
+    Route::post("/handnote-update", [HandnoteController::class, 'HandnoteUpdate']);
+    Route::post("/handnote-delete", [HandnoteController::class, 'HandnoteDelete']);
+
+    // clientsource section route
+    Route::get("/clientsource-section", [ClientsourceController::class, 'ClientsourceSection'])->name('clientsource.section');
+    Route::get("/clientsource-list", [ClientsourceController::class, 'ClientsourceList']);
+    Route::post("/clientsource-create", [ClientsourceController::class, 'ClientsourceCreate']);
+    Route::post("/clientsource-by-id", [ClientsourceController::class, 'ClientsourceById']);
+    Route::post("/clientsource-update", [ClientsourceController::class, 'ClientsourceUpdate']);
+    Route::post("/clientsource-delete", [ClientsourceController::class, 'ClientsourceDelete']);
+
+    // invoice section route
+    Route::get("/invoice-section", [InvoiceController::class, 'InvoiceSection'])->name('invoice.section');
+    Route::get("/invoice-list", [InvoiceController::class, 'InvoiceList']);
+    Route::post("/invoice-create", [InvoiceController::class, 'InvoiceCreate']);
+    Route::post("/invoice-by-id", [InvoiceController::class, 'InvoiceById']);
+    Route::post("/invoice-update", [InvoiceController::class, 'InvoiceUpdate']);
+    Route::post("/invoice-delete", [InvoiceController::class, 'InvoiceDelete']);
+    Route::get("/invoice-preview/{id}", [InvoiceController::class, 'InvoicePreview'])->name('invoice.preview');
+    Route::get("/invoice-download/{id}", [InvoiceController::class, 'InvoiceDownload'])->name('invoice.download');
 });
 
 require __DIR__.'/auth.php';

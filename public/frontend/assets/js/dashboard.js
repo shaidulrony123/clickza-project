@@ -44,6 +44,8 @@ $(document).ready(function () {
   $(document).on('click', '[data-section]', function (e) {
     const s = $(this).data('section');
     if (!s) return;
+    const targetSection = document.getElementById('sec-' + s);
+    if (!targetSection) return;
     // Prevent default only for plain anchor links (not buttons)
     if ($(this).is('a')) { e.preventDefault(); }
     // Close any open Bootstrap dropdowns

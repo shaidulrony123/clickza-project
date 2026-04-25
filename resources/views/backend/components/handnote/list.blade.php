@@ -1,0 +1,99 @@
+<div class="dash-section active" id="sec-handnotes">
+    <div class="section-toolbar">
+        <h2 class="section-h">Hand Notes</h2>
+        <button class="btn-primary-d" id="addProjectBtn" type="button" data-bs-toggle="modal"
+            data-bs-target="#exampleModal">
+            <i class="fas fa-plus me-2"></i>Add New Note
+        </button>
+    </div>
+
+    <div class="dash-card p-0">
+        <div class="table-responsive">
+            <table class="dash-table" id="example">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Target</th>
+                        <th>Note</th>
+                        <th>Target Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableList"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    getHandNoteData();
+
+    async function getHandNoteData() {
+        try {
+            let res = await axios.get('/handnote-list');
+            let tableList = $("#tableList");
+
+            if ($.fn.DataTable.isDataTable('#example')) {
+                $('#example').DataTable().destroy();
+            }
+
+            tableList.empty();
+
+            res.data.rows.forEach(function (item) {
+                let statusBadge = String(item.status) === '1'
+                    ? `<span class="status-badge live">Active</span>`
+                    : `<span class="status-badge archive">Inactive</span>`;
+
+                let row = `
+                    <tr>
+                        <td>${item.id ?? ''}</td>
+                        <td>${item.title ?? ''}</td>
+                        <td>${item.target ?? ''}</td>
+                        <td>${item.note ?? ''}</td>
+                        <td>${item.target_date ?? ''}</td>
+                        <td>${statusBadge}</td>
+                        <td>
+                            <div class="row-actions">
+                                <button data-id="${item.id}" class="ra-btn edit editBtn">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button data-id="${item.id}" class="ra-btn del deleteBtn">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+
+                tableList.append(row);
+            });
+
+            $(document).off('click', '.editBtn').on('click', '.editBtn', async function () {
+                let id = $(this).data('id');
+                await FillUpUpdateForm(id);
+
+                let updateModal = new bootstrap.Modal(document.getElementById('updateModal'));
+                updateModal.show();
+            });
+
+            $(document).off('click', '.deleteBtn').on('click', '.deleteBtn', function () {
+                let id = $(this).data('id');
+                $("#deleteID").val(id);
+
+                let deleteModal = new bootstrap.Modal(document.getElementById('delete-modal'));
+                deleteModal.show();
+            });
+
+            new DataTable('#example', {
+                order: [[0, 'desc']],
+                lengthMenu: [10, 20, 50, 100],
+            });
+
+        } catch (error) {
+            console.error('Error fetching hand note data:', error);
+        }
+    }
+
+</script>
