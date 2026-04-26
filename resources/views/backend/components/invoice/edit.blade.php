@@ -63,6 +63,11 @@
                     </div>
 
                     <div class="form-group-d">
+                        <label>Internal Cost</label>
+                        <input type="number" step="0.01" min="0" id="updateInvoiceInternalCost" value="0">
+                    </div>
+
+                    <div class="form-group-d">
                         <label>Client Address</label>
                         <textarea id="updateInvoiceClientAddress" rows="3" placeholder="Enter client address"></textarea>
                     </div>
@@ -83,6 +88,8 @@
                     <div class="invoice-summary-box">
                         <span>Subtotal: <strong id="updateInvoiceSubtotalText">0.00</strong></span>
                         <span>Total: <strong id="updateInvoiceTotalText">0.00</strong></span>
+                        <span>Cost: <strong id="updateInvoiceInternalCostText">0.00</strong></span>
+                        <span>Profit: <strong id="updateInvoiceProfitText">0.00</strong></span>
                     </div>
 
                     <button type="button" class="btn-primary-d" onclick="invoiceUpdate()">
@@ -133,13 +140,17 @@
 
         const discount = parseFloat(document.getElementById('updateInvoiceDiscount').value || 0);
         const total = Math.max(subtotal - discount, 0);
+        const internalCost = parseFloat(document.getElementById('updateInvoiceInternalCost').value || 0);
+        const profit = total - internalCost;
 
         document.getElementById('updateInvoiceSubtotalText').textContent = subtotal.toFixed(2);
         document.getElementById('updateInvoiceTotalText').textContent = total.toFixed(2);
+        document.getElementById('updateInvoiceInternalCostText').textContent = internalCost.toFixed(2);
+        document.getElementById('updateInvoiceProfitText').textContent = profit.toFixed(2);
     }
 
     document.addEventListener('input', function (event) {
-        if (event.target.matches('#updateInvoiceItemsWrapper input, #updateInvoiceDiscount')) {
+        if (event.target.matches('#updateInvoiceItemsWrapper input, #updateInvoiceDiscount, #updateInvoiceInternalCost')) {
             recalculateUpdateInvoiceSummary();
         }
     });
@@ -159,6 +170,7 @@
             document.getElementById('updateInvoiceDueDate').value = data.due_date ?? '';
             document.getElementById('updateInvoiceStatus').value = data.status ?? 'draft';
             document.getElementById('updateInvoiceDiscount').value = data.discount ?? 0;
+            document.getElementById('updateInvoiceInternalCost').value = data.internal_cost ?? 0;
             document.getElementById('updateInvoiceNotes').value = data.notes ?? '';
             document.getElementById('updateInvoiceItemsWrapper').innerHTML = '';
 
@@ -193,6 +205,7 @@
                 due_date: document.getElementById('updateInvoiceDueDate').value,
                 status: document.getElementById('updateInvoiceStatus').value,
                 discount: document.getElementById('updateInvoiceDiscount').value,
+                internal_cost: document.getElementById('updateInvoiceInternalCost').value,
                 notes: document.getElementById('updateInvoiceNotes').value.trim(),
                 items: collectInvoiceItems('#updateInvoiceItemsWrapper'),
             };

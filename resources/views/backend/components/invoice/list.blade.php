@@ -18,6 +18,8 @@
                         <th>Due Date</th>
                         <th>Status</th>
                         <th>Total</th>
+                        <th>Cost</th>
+                        <th>Profit</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -44,6 +46,11 @@
         return `<span class="status-badge archive">${current.charAt(0).toUpperCase() + current.slice(1)}</span>`;
     }
 
+    function invoiceMoney(value) {
+        const amount = Number(value ?? 0);
+        return `TK ${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
     async function getInvoiceData() {
         try {
             let res = await axios.get('/invoice-list');
@@ -56,6 +63,10 @@
             tableList.empty();
 
             res.data.rows.forEach(function (item) {
+                const total = parseFloat(item.total ?? 0) || 0;
+                const internalCost = parseFloat(item.internal_cost ?? 0) || 0;
+                const profit = total - internalCost;
+
                 let row = `
                     <tr>
                         <td>${item.id ?? ''}</td>
@@ -64,7 +75,9 @@
                         <td>${item.issue_date ?? ''}</td>
                         <td>${item.due_date ?? ''}</td>
                         <td>${invoiceStatusBadge(item.status)}</td>
-                        <td>${item.total ?? '0.00'}</td>
+                        <td>${invoiceMoney(total)}</td>
+                        <td>${invoiceMoney(internalCost)}</td>
+                        <td>${invoiceMoney(profit)}</td>
                         <td>
                             <div class="row-actions">
                                 <a href="/invoice-preview/${item.id}" class="ra-btn edit" target="_blank" title="Preview">

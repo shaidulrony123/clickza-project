@@ -46,13 +46,13 @@ $projects = Project::with('category')->get();
                     <div class="project-img" style="background-image: url('{{ asset($project->image) }}'); background-size: cover; background-position: center;">
                         <div class="project-overlay">
                             @if($project->project_link)
-                                <a href="{{ $project->project_link }}" target="_blank" class="proj-link">
+                                <a href="{{ $project->project_link }}" target="_blank" rel="noopener" class="proj-link">
                                     <i class="fas fa-external-link-alt"></i>
                                 </a>
                             @endif
 
                             @if($project->github_link)
-                                <a href="{{ $project->github_link }}" target="_blank" class="proj-link">
+                                <a href="{{ $project->github_link }}" target="_blank" rel="noopener" class="proj-link">
                                     <i class="fab fa-github"></i>
                                 </a>
                             @endif

@@ -120,6 +120,7 @@ class InvoiceController extends Controller
             'due_date' => 'nullable|date',
             'status' => 'required|string|max:255',
             'discount' => 'nullable|numeric|min:0',
+            'internal_cost' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string',
             'items' => 'required|array',
             'items.*.description' => 'nullable|string|max:255',
@@ -157,6 +158,7 @@ class InvoiceController extends Controller
         $subtotal = round(collect($items)->sum('amount'), 2);
         $discount = round((float) ($validated['discount'] ?? 0), 2);
         $total = round(max($subtotal - $discount, 0), 2);
+        $internalCost = round((float) ($validated['internal_cost'] ?? 0), 2);
 
         return [
             'invoice_number' => $validated['invoice_number'] ?? $this->generateInvoiceNumber(),
@@ -171,6 +173,7 @@ class InvoiceController extends Controller
             'subtotal' => $subtotal,
             'discount' => $discount,
             'total' => $total,
+            'internal_cost' => $internalCost,
             'notes' => $validated['notes'] ?? null,
         ];
     }

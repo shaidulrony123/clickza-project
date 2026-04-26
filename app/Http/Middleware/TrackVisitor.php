@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 use App\Models\Visit;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,13 +15,12 @@ class TrackVisitor
     {
         $response = $next($request);
 
-        // Bot skip
-        if ($this->isBot($request)) {
+        if ($this->shouldSkip($request, $response)) {
             return $response;
         }
 
-        // Dashboard/admin route skip করতে চাইলে
-        if ($request->is('dashboard') || $request->is('admin/*')) {
+        // Bot skip
+        if ($this->isBot($request)) {
             return $response;
         }
 
@@ -50,15 +50,19 @@ class TrackVisitor
             $isUnique = true;
         }
 
-        Visit::create([
-            'visitor_id' => $visitorId,
-            'ip' => $ip,
-            'country_code' => $countryCode,
-            'country_name' => $countryName,
-            'user_agent' => $userAgent,
-            'path' => $path,
-            'is_unique' => $isUnique,
-        ]);
+        try {
+            Visit::create([
+                'visitor_id' => $visitorId,
+                'ip' => $ip,
+                'country_code' => $countryCode,
+                'country_name' => $countryName,
+                'user_agent' => $userAgent,
+                'path' => $path,
+                'is_unique' => $isUnique,
+            ]);
+        } catch (\Throwable $e) {
+            return $response;
+        }
 
         cookie()->queue(cookie(
             'visitor_id',
@@ -67,6 +71,43 @@ class TrackVisitor
         ));
 
         return $response;
+    }
+
+    private function shouldSkip(Request $request, Response $response): bool
+    {
+        if (App::environment('testing')) {
+            return true;
+        }
+
+        if ($response->getStatusCode() >= 400) {
+            return true;
+        }
+
+        if (!$request->isMethod('GET') || $request->expectsJson() || $request->ajax()) {
+            return true;
+        }
+
+        if ($request->user()) {
+            return true;
+        }
+
+        return $request->is(
+            'dashboard',
+            'profile',
+            'visitor-dashboard',
+            'admin/*',
+            '*-section',
+            '*-list',
+            '*-by-id',
+            '*-create',
+            '*-update',
+            '*-delete',
+            'about-save',
+            'contact-submit',
+            'invoice-*',
+            'storage/*',
+            'up'
+        );
     }
 
     private function isBot(Request $request): bool

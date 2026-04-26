@@ -206,11 +206,13 @@ a { text-decoration: none; color: inherit; }
 .si-orange { background: rgba(255,152,0,0.1); color: var(--orange); }
 .stat-info { flex: 1; min-width: 0; }
 .stat-val { font-family: var(--font-head); font-size: 1.6rem; font-weight: 800; display: block; line-height: 1; color: var(--text); }
+.stat-money { font-family: var(--font-head); font-size: 1.35rem; font-weight: 800; display: block; line-height: 1.1; color: var(--text); word-break: break-word; }
 .stat-info p { color: var(--text-muted); font-size: 12px; margin: 4px 0 0; }
 .stat-trend { font-size: 11px; padding: 4px 10px; border-radius: 50px; white-space: nowrap; flex-shrink: 0; }
 .stat-trend.up { background: rgba(0,230,118,0.1); color: var(--green); }
 .stat-trend.down { background: rgba(255,77,109,0.1); color: var(--accent3); }
 .stat-trend.neutral { background: rgba(255,255,255,0.05); color: var(--text-muted); }
+.finance-stats-row { grid-template-columns: repeat(3, minmax(260px, 1fr)); }
 
 /* ══ CHARTS ══ */
 .charts-row { display: grid; grid-template-columns: 1fr 300px; gap: 16px; margin-bottom: 20px; }
@@ -506,6 +508,7 @@ a { text-decoration: none; color: inherit; }
   .dash-section { padding: 16px; }
   .topbar { padding: 10px 16px; }
   .stats-row { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .finance-stats-row { grid-template-columns: 1fr; }
   .stat-card { padding: 14px 12px; gap: 10px; }
   .stat-val { font-size: 1.4rem; }
   .stat-trend { display: none; }

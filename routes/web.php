@@ -22,6 +22,10 @@ use App\Http\Controllers\InvoiceController;
 Route::get('/', function () {
     return view('frontend.pages.home');
 });
+Route::get("/about-list", [AboutController::class, 'AboutList'])->name('about.list');
+Route::post('/contact-submit', [ContactController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('contact.submit');
 
 // Route::get('/dashboard', function () {
 //     return view('backend.layouts.app');
@@ -29,7 +33,9 @@ Route::get('/', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
-    Route::get('/visitor-dashboard', [VisitController::class, 'visitDashboard'])->name('visitor.section');
+Route::get('/visitor-dashboard', [VisitController::class, 'visitDashboard'])
+    ->middleware(['auth', 'verified'])
+    ->name('visitor.section');
 // Route::get('/dashboard-page', [DashboardController::class, 'Dashboard'])
 //     ->middleware(['auth', 'verified'])
 //     ->name('dashboard.page');
@@ -40,7 +46,6 @@ Route::middleware('auth')->group(function () {
 
     // about section route
     Route::get("/about-section", [AboutController::class, 'AboutSection'])->name('about.section');
-    Route::get("/about-list", [AboutController::class, 'AboutList'])->name('about.list');
     Route::post("/about-save", [AboutController::class, 'AboutSave'])->name('about.save');
 
     // category section route
@@ -76,7 +81,6 @@ Route::middleware('auth')->group(function () {
     // contact section route
     Route::get("/contact-section", [ContactController::class, 'ContactSection'])->name('contact.section');
     Route::get("/contact-list", [ContactController::class, 'ContactList']);
-    Route::post('/contact-submit', [ContactController::class, 'store'])->name('contact.submit');
     Route::post("/contact-by-id", [ContactController::class, 'ContactById']);
     Route::post("/contact-update", [ContactController::class, 'ContactUpdate']);
     Route::post("/contact-delete", [ContactController::class, 'ContactDelete']);

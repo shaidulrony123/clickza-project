@@ -31,9 +31,9 @@ public function ProductCreate(Request $request)
         'badge' => 'nullable|string|max:255',
         'description' => 'required|string',
         'long_description' => 'required|string',
-        'price' => 'required|numeric',
-        'discount' => 'nullable|numeric',
-        'image' => 'nullable|image|mimes:jpg,jpeg,png,webp',
+        'price' => 'required|numeric|min:0',
+        'discount' => 'nullable|numeric|min:0',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
         'tags' => 'required|array|min:1',
         'tags.*' => 'required|string|max:255',
         'icon' => 'nullable|string|max:255',
@@ -107,9 +107,9 @@ public function ProductUpdate(Request $request)
         'badge' => 'nullable|string|max:255',
         'description' => 'required|string',
         'long_description' => 'required|string',
-        'price' => 'required|numeric',
-        'discount' => 'nullable|numeric',
-        'image' => 'nullable|image|mimes:jpg,jpeg,png,webp',
+        'price' => 'required|numeric|min:0',
+        'discount' => 'nullable|numeric|min:0',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
         'tags' => 'required|array|min:1',
         'tags.*' => 'required|string|max:255',
         'icon' => 'nullable|string|max:255',
@@ -172,16 +172,16 @@ public function ProductDelete(Request $request)
         try {
             // Find the advertisement by ID
             $product = Product::find($request->input('id'));
-    
+
             if ($product) {
                 // Get the image path from the advertisement record
-                $imagePath = public_path($product->image);
-    
+                $imagePath = $product->image ? public_path($product->image) : null;
+
                 // Delete the image from the server if it exists
-                if (file_exists($imagePath)) {
+                if ($imagePath && file_exists($imagePath)) {
                     unlink($imagePath);
                 }
-    
+
                 // Delete the product record
                 $product->delete();
     

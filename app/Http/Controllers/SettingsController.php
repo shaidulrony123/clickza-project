@@ -25,23 +25,39 @@ class SettingsController extends Controller
     public function SettingsSave(Request $request)
     {
         try {
+            $validated = $request->validate([
+                'email' => 'nullable|email|max:255',
+                'phone' => 'nullable|string|max:50',
+                'address' => 'nullable|string|max:255',
+                'copyright' => 'nullable|string|max:255',
+                'facebook' => 'nullable|url|max:255',
+                'twitter' => 'nullable|url|max:255',
+                'linkedin' => 'nullable|url|max:255',
+                'github' => 'nullable|url|max:255',
+                'youtube' => 'nullable|url|max:255',
+                'whatsapp' => 'nullable|string|max:255',
+                'header_logo' => 'nullable|file|mimes:jpg,jpeg,png,webp,svg|max:2048',
+                'footer_logo' => 'nullable|file|mimes:jpg,jpeg,png,webp,svg|max:2048',
+                'favicon' => 'nullable|file|mimes:ico,jpg,jpeg,png,webp,svg|max:1024',
+            ]);
+
             $settings = Settings::first();
 
             if (!$settings) {
                 $settings = new Settings();
             }
 
-            $settings->email = $request->email;
-            $settings->phone = $request->phone;
-            $settings->address = $request->address;
-            $settings->copyright = $request->copyright;
+            $settings->email = $validated['email'] ?? null;
+            $settings->phone = $validated['phone'] ?? null;
+            $settings->address = $validated['address'] ?? null;
+            $settings->copyright = $validated['copyright'] ?? null;
 
-            $settings->facebook = $request->facebook;
-            $settings->twitter = $request->twitter;
-            $settings->linkedin = $request->linkedin;
-            $settings->github = $request->github;
-            $settings->youtube = $request->youtube;
-            $settings->whatsapp = $request->whatsapp;
+            $settings->facebook = $validated['facebook'] ?? null;
+            $settings->twitter = $validated['twitter'] ?? null;
+            $settings->linkedin = $validated['linkedin'] ?? null;
+            $settings->github = $validated['github'] ?? null;
+            $settings->youtube = $validated['youtube'] ?? null;
+            $settings->whatsapp = $validated['whatsapp'] ?? null;
 
             $path = public_path('frontend/images/settings');
 

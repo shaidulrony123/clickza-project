@@ -1,6 +1,9 @@
 <?php
   use App\Models\Settings;
   $settings = Settings::first();
+  $email = $settings?->email ?: 'hello@example.com';
+  $phone = $settings?->phone ?: '+8801234567890';
+  $address = $settings?->address ?: 'Bangladesh';
 ?>
 <!-- ══ CONTACT ══ -->
 <section class="contact-section section-pad" id="contact">
@@ -11,16 +14,24 @@
                 <h2 class="section-title">Let's Build Something<br />Great Together</h2>
                 <p class="about-text">Have a project in mind or need a bug fixed? My inbox is always open.</p>
                 <div class="contact-info">
-                    <div class="ci-item"><i class="fas fa-envelope"></i><span>{{ $settings->email }}</span></div>
-                    <div class="ci-item"><i class="fas fa-phone"></i><span>{{ $settings->phone }}</span></div>
-                    <div class="ci-item"><i class="fas fa-map-marker-alt"></i><span>{{ $settings->address }}</span></div>
+                    <div class="ci-item"><i class="fas fa-envelope"></i><span>{{ $email }}</span></div>
+                    <div class="ci-item"><i class="fas fa-phone"></i><span>{{ $phone }}</span></div>
+                    <div class="ci-item"><i class="fas fa-map-marker-alt"></i><span>{{ $address }}</span></div>
                 </div>
-               <div class="social-links">
-    <a href="{{ $settings->github }}" target="_blank"><i class="fab fa-github"></i></a>
-    <a href="{{ $settings->linkedin }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-    <a href="{{ $settings->twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>
-    <a href="{{ $settings->facebook }}" target="_blank"><i class="fab fa-facebook"></i></a>
-</div>
+	               <div class="social-links">
+    @if($settings?->github)
+        <a href="{{ $settings->github }}" target="_blank" rel="noopener"><i class="fab fa-github"></i></a>
+    @endif
+    @if($settings?->linkedin)
+        <a href="{{ $settings->linkedin }}" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+    @endif
+    @if($settings?->twitter)
+        <a href="{{ $settings->twitter }}" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
+    @endif
+    @if($settings?->facebook)
+        <a href="{{ $settings->facebook }}" target="_blank" rel="noopener"><i class="fab fa-facebook"></i></a>
+    @endif
+	</div>
             </div>
             <div class="col-lg-7">
                 <div class="contact-form-wrap">
@@ -28,11 +39,11 @@
                         <div class="form-row-custom">
                             <div class="form-group-custom">
                                 <label>Your Name</label>
-                                <input type="text" name="name" placeholder="Enter your name" />
+                                <input type="text" name="name" placeholder="Enter your name" required />
                             </div>
                             <div class="form-group-custom">
                                 <label>Email Address</label>
-                                <input type="email" name="email" placeholder="Enter your email" />
+                                <input type="email" name="email" placeholder="Enter your email" required />
                             </div>
                         </div>
                         <div class="form-group-custom">
@@ -48,7 +59,7 @@
                         </div>
                         <div class="form-group-custom">
                             <label>Message</label>
-                            <textarea name="message" rows="5" placeholder="Tell me about your project..."></textarea>
+                            <textarea name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
                         </div>
 
                         {{-- <button type="submit" class="btn-primary-custom w-100" id="sendBtn">
@@ -69,8 +80,10 @@ function submitForm() {
 
     let form = document.getElementById('contactForm');
     let sendBtn = document.getElementById('sendBtn');
+    let originalText = sendBtn.innerHTML;
 
     sendBtn.disabled = true;
+    sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
 
     axios.post('/contact-submit', {
         name: form.name.value,
@@ -87,7 +100,7 @@ function submitForm() {
         Swal.fire({
             icon: 'success',
             title: 'Success!',
-            text: 'Message sent successfully!',
+        text: response.data.message ?? 'Message sent successfully!',
             timer: 2000,
             showConfirmButton: false
         });
@@ -114,6 +127,7 @@ function submitForm() {
     })
     .finally(function() {
         sendBtn.disabled = false;
+        sendBtn.innerHTML = originalText;
     });
 }
 </script>

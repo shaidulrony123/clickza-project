@@ -1,12 +1,13 @@
 <?php
   use App\Models\Settings;
   $settings = Settings::first();
+  $headerLogo = $settings?->header_logo ?: 'frontend/assets/images/logo.jpeg';
 ?>
 <!-- ══ NAVBAR ══ -->
 <nav class="navbar fixed-top" id="mainNav">
   <div class="container-fluid px-3 px-lg-5">
     <a class="navbar-brand logo-text" href="#">
-      <img class="img-fluid w-100" src="{{ asset($settings->header_logo) }}" alt="">
+      <img class="img-fluid w-100" src="{{ asset($headerLogo) }}" alt="Logo">
     </a>
 
     <ul class="nav-links d-none d-lg-flex">
@@ -35,7 +36,9 @@
       <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
         <i class="fas fa-moon" id="themeIcon"></i>
       </button>
-      <a href="{{ route('dashboard') }}" class="btn-dash d-none d-lg-flex">Dashboard <i class="fas fa-arrow-right ms-1"></i></a>
+      @auth
+        <a href="{{ route('dashboard') }}" class="btn-dash d-none d-lg-flex">Dashboard <i class="fas fa-arrow-right ms-1"></i></a>
+      @endauth
       <button class="hamburger d-lg-none" id="hamburger" data-bs-toggle="offcanvas" data-bs-target="#mobileOffcanvas">
         <span></span><span></span><span></span>
       </button>
@@ -47,7 +50,7 @@
 <div class="offcanvas offcanvas-end mobile-offcanvas" tabindex="-1" id="mobileOffcanvas">
   <div class="offcanvas-header">
     {{-- <span class="logo-text">DEV<span class="accent">.</span></span> --}}
-    <img class="img-fluid w-100" src="{{ asset($settings->header_logo) }}" alt="">
+    <img class="img-fluid w-100" src="{{ asset($headerLogo) }}" alt="Logo">
     <button type="button" class="offcanvas-close" data-bs-dismiss="offcanvas"><i class="fas fa-times"></i></button>
   </div>
   <div class="offcanvas-body">
@@ -71,12 +74,20 @@
       <li><a href="#author"    class="mob-link" data-bs-dismiss="offcanvas">Marketplace</a></li>
       <li><a href="#products"  class="mob-link" data-bs-dismiss="offcanvas">Products</a></li>
       <li><a href="#contact"   class="mob-link" data-bs-dismiss="offcanvas">Contact</a></li>
-      <li><a href="dashboard.html" class="mob-link" data-bs-dismiss="offcanvas">Dashboard</a></li>
+      @auth
+        <li><a href="{{ route('dashboard') }}" class="mob-link" data-bs-dismiss="offcanvas">Dashboard</a></li>
+      @endauth
     </ul>
     <div class="mob-social">
-      <a href="#"><i class="fab fa-github"></i></a>
-      <a href="#"><i class="fab fa-linkedin-in"></i></a>
-      <a href="#"><i class="fab fa-twitter"></i></a>
+      @if($settings?->github)
+        <a href="{{ $settings->github }}" target="_blank" rel="noopener"><i class="fab fa-github"></i></a>
+      @endif
+      @if($settings?->linkedin)
+        <a href="{{ $settings->linkedin }}" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+      @endif
+      @if($settings?->twitter)
+        <a href="{{ $settings->twitter }}" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
+      @endif
     </div>
   </div>
 </div>

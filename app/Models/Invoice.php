@@ -19,6 +19,7 @@ class Invoice extends Model
         'subtotal',
         'discount',
         'total',
+        'internal_cost',
         'notes',
     ];
 
@@ -26,5 +27,6 @@ class Invoice extends Model
         'items' => 'array',
         'issue_date' => 'date',
         'due_date' => 'date',
+        'internal_cost' => 'decimal:2',
     ];
 }

@@ -42,7 +42,7 @@
                 <a id="download_cv_btn" href="#" 
    class="btn-primary-custom mt-4 d-inline-block"
    download>
-    Download CV1 <i class="fas fa-download ms-2"></i>
+    Download CV <i class="fas fa-download ms-2"></i>
 </a>
             </div>
         </div>
@@ -65,17 +65,17 @@ function loadAboutSection() {
 
             // Title
             if (data.title) {
-                document.getElementById('about_title_front').innerHTML = data.title;
+                document.getElementById('about_title_front').textContent = data.title;
             }
 
             // Subtitle
             if (data.subtitle) {
-                document.getElementById('about_subtitle_front').innerHTML = data.subtitle;
+                document.getElementById('about_subtitle_front').textContent = data.subtitle;
             }
 
             // Description
             if (data.description) {
-                document.getElementById('about_description_front').innerHTML = data.description;
+                document.getElementById('about_description_front').textContent = data.description;
             }
 
             // Tags
@@ -86,7 +86,10 @@ function loadAboutSection() {
                 const tags = data.tag.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
                 tags.forEach(tag => {
                     const span = document.createElement('span');
-                    span.innerHTML = `<i class="fas fa-tag me-1"></i>${tag}`;
+                    const icon = document.createElement('i');
+                    icon.className = 'fas fa-tag me-1';
+                    span.appendChild(icon);
+                    span.appendChild(document.createTextNode(tag));
                     tagsContainer.appendChild(span);
                 });
             }
@@ -110,7 +113,7 @@ function loadAboutSection() {
 }
 
 // Page load হওয়ার সাথে সাথে ডেটা লোড করবে
-window.onload = function() {
+document.addEventListener('DOMContentLoaded', function() {
     loadAboutSection();
-};
+});
 </script>

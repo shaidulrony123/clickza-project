@@ -255,6 +255,7 @@
                 <p>Total Products</p>
             </div>
         </div>
+
     </div>
 
     <div class="row">
@@ -332,6 +333,39 @@
                     <div id="dashboardHandnoteList"></div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="stats-row finance-stats-row mt-4">
+        <div class="stat-card">
+            <div class="stat-icon si-orange">
+                <i class="fas fa-file-invoice-dollar"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-money">TK {{ number_format((float) ($paidInvoiceRevenue ?? 0), 2) }}</span>
+                <p>Paid Revenue</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon si-purple">
+                <i class="fas fa-receipt"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-money">TK {{ number_format((float) ($paidInvoiceCost ?? 0), 2) }}</span>
+                <p>Internal Cost</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon si-green">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-money">TK {{ number_format((float) ($paidInvoiceProfit ?? 0), 2) }}</span>
+                <p>Net Profit</p>
+            </div>
+            <span class="stat-trend neutral">{{ number_format((float) ($paidInvoiceMargin ?? 0), 1) }}%</span>
         </div>
     </div>
 

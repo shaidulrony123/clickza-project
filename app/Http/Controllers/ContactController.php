@@ -25,22 +25,27 @@ class ContactController extends Controller
 
     public function store(Request $request)
 {
-    // validation
-    $request->validate([
+    $validated = $request->validate([
         'name' => 'required|string|max:100',
         'email' => 'required|email',
-        'subject' => 'nullable|string',
-        'message' => 'required|string',
+        'subject' => 'nullable|string|max:255',
+        'message' => 'required|string|max:5000',
     ]);
 
-    // save
     Contact::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'subject' => $request->subject,
-        'message' => $request->message,
+        'name' => $validated['name'],
+        'email' => $validated['email'],
+        'subject' => $validated['subject'] ?? null,
+        'message' => $validated['message'],
         'status' => 'new',
     ]);
+
+    if ($request->expectsJson()) {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Message sent successfully!',
+        ]);
+    }
 
     return back()->with('success', 'Message sent successfully!');
 }

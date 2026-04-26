@@ -1,6 +1,14 @@
 <?php 
     use App\Models\Product;
+    use App\Models\Settings;
+
     $products = Product::where('status', 1)->get();
+    $settings = Settings::first();
+    $contactPhone = $settings?->phone ?: '+8801234567890';
+    $contactPhoneDigits = preg_replace('/\D+/', '', $contactPhone);
+    $contactEmail = $settings?->email ?: 'hello@example.com';
+    $contactLogo = $settings?->header_logo ?: 'frontend/assets/images/logo.jpeg';
+    $whatsappNumber = preg_replace('/\D+/', '', $settings?->whatsapp ?: $contactPhone);
 ?>
 
 <!-- ══ PRODUCTS ══ -->
@@ -79,12 +87,12 @@
 
                         @if(!empty($product->long_description))
                             <div class="product-features">
-                                {!! $product->long_description !!}
+                                {!! nl2br(e($product->long_description)) !!}
                             </div>
                         @endif
 
                         @if($product->live_link)
-                            <a href="{{ $product->live_link }}" target="_blank" class="live-btn-buy mb-3">
+                            <a href="{{ $product->live_link }}" target="_blank" rel="noopener" class="live-btn-buy mb-3">
                                 <i class="fas fa-eye me-2"></i>Live Preview
                             </a>
                         @endif
@@ -102,7 +110,7 @@
 
                         <a href="javascript:void(0)"
                            class="{{ $btnClass }}"
-                           onclick="openContactModal('{{ $product->name }}')">
+                           onclick="openContactModal(@js($product->name))">
                             <i class="fas fa-shopping-cart me-2"></i>Buy Now
                         </a>
                     </div>
@@ -134,34 +142,38 @@
 
             <div class="modal-body text-center pt-2">
                 <div class="contact-logo-wrap mb-3">
-                    <img src="{{ asset('frontend/assets/images/logo.png') }}" alt="Logo" class="contact-logo">
+                    <img src="{{ asset($contactLogo) }}" alt="Logo" class="contact-logo">
                 </div>
 
                 <h4 id="modalProductName" class="mb-2"></h4>
                 <p class="text-muted mb-4">To buy this product, contact us through any option below.</p>
 
                 <div class="contact-info-list">
-                    <a href="tel:+8801234567890" class="contact-btn phone-btn">
+                    <a href="tel:{{ $contactPhoneDigits }}" class="contact-btn phone-btn">
                         <i class="fas fa-phone-alt me-2"></i>
-                        <span>+8801234567890</span>
+                        <span>{{ $contactPhone }}</span>
                     </a>
 
-                    <a href="mailto:your@email.com" class="contact-btn email-btn">
+                    <a href="mailto:{{ $contactEmail }}" class="contact-btn email-btn">
                         <i class="fas fa-envelope me-2"></i>
-                        <span>your@email.com</span>
+                        <span>{{ $contactEmail }}</span>
                     </a>
 
-                    <a href="https://facebook.com/yourpage" target="_blank" class="contact-btn facebook-btn">
-                        <i class="fab fa-facebook-f me-2"></i>
-                        <span>Facebook Page</span>
-                    </a>
+                    @if($settings?->facebook)
+                        <a href="{{ $settings->facebook }}" target="_blank" rel="noopener" class="contact-btn facebook-btn">
+                            <i class="fab fa-facebook-f me-2"></i>
+                            <span>Facebook Page</span>
+                        </a>
+                    @endif
 
-                    <a href="https://youtube.com/yourchannel" target="_blank" class="contact-btn youtube-btn">
-                        <i class="fab fa-youtube me-2"></i>
-                        <span>YouTube Channel</span>
-                    </a>
+                    @if($settings?->youtube)
+                        <a href="{{ $settings->youtube }}" target="_blank" rel="noopener" class="contact-btn youtube-btn">
+                            <i class="fab fa-youtube me-2"></i>
+                            <span>YouTube Channel</span>
+                        </a>
+                    @endif
 
-                    <a href="https://wa.me/8801234567890?text=I want to buy this product" target="_blank" class="contact-btn whatsapp-btn">
+                    <a href="https://wa.me/{{ $whatsappNumber }}?text=I want to buy this product" target="_blank" rel="noopener" class="contact-btn whatsapp-btn">
                         <i class="fab fa-whatsapp me-2"></i>
                         <span>WhatsApp</span>
                     </a>
@@ -271,7 +283,7 @@
         document.getElementById('modalProductName').innerText = productName;
 
         const whatsappBtn = document.querySelector('#buyNowContactModal .whatsapp-btn');
-        whatsappBtn.href = "https://wa.me/8801234567890?text=" + encodeURIComponent("I want to buy " + productName);
+        whatsappBtn.href = "https://wa.me/{{ $whatsappNumber }}?text=" + encodeURIComponent("I want to buy " + productName);
 
         const modal = new bootstrap.Modal(document.getElementById('buyNowContactModal'));
         modal.show();

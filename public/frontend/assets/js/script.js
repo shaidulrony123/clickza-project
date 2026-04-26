@@ -157,19 +157,7 @@ $(document).ready(function () {
   $('.t-dot').on('click', function () { showTesti(parseInt($(this).data('idx'))); });
   setInterval(function () { showTesti((curT + 1) % $('.testi-card').length); }, 4000);
 
-  /* ── 12. CONTACT FORM ── */
-  $('#sendBtn').on('click', function () {
-    const $b = $(this), orig = $b.html();
-    $b.html('<i class="fas fa-spinner fa-spin me-2"></i> Sending...').prop('disabled', true);
-    // Example axios POST (replace URL with real endpoint)
-    // axios.post('/api/contact', { name, email, message }).then(...)
-    setTimeout(function () {
-      $b.html('<i class="fas fa-check me-2"></i> Sent!').css({ background: '#00e676', boxShadow: '0 0 20px rgba(0,230,118,.4)' });
-      setTimeout(function () { $b.html(orig).prop('disabled', false).css({ background: '', boxShadow: '' }); }, 3000);
-    }, 1500);
-  });
-
-  /* ── 13. PARALLAX ORBS ── */
+  /* ── 12. PARALLAX ORBS ── */
   $(document).on('mousemove', function (e) {
     const x = e.clientX / window.innerWidth - 0.5;
     const y = e.clientY / window.innerHeight - 0.5;
@@ -178,24 +166,24 @@ $(document).ready(function () {
     gsap.to('.orb3', { x: x * 20, y: y * 20, duration: 1.5, ease: 'power1.out' });
   });
 
-  /* ── 14. SMOOTH ANCHOR SCROLL ── */
+  /* ── 13. SMOOTH ANCHOR SCROLL ── */
   $('a[href^="#"]').on('click', function (e) {
     const t = $($(this).attr('href'));
     if (t.length) { e.preventDefault(); $('html,body').animate({ scrollTop: t.offset().top - 80 }, 700); }
   });
 
-  /* ── 15. SECTION REVEAL ── */
+  /* ── 14. SECTION REVEAL ── */
   gsap.utils.toArray('.section-pad').forEach(function (s) {
     gsap.from(s, { scrollTrigger: { trigger: s, start: 'top 88%', toggleActions: 'play none none none' }, opacity: 0, y: 24, duration: .65, ease: 'power2.out' });
   });
 
-  /* ── 16. AXIOS EXAMPLE (ready to use) ── */
+  /* ── 15. AXIOS EXAMPLE (ready to use) ── */
   // Example: load portfolio stats via API
   // axios.get('/api/stats').then(function(res) {
   //   console.log(res.data);
   // });
 
-  /* ── 17. DATATABLES EXAMPLE (ready to use) ── */
+  /* ── 16. DATATABLES EXAMPLE (ready to use) ── */
   // If you add a <table id="projectsTable"> anywhere, init like:
   // $('#projectsTable').DataTable({ responsive: true, pageLength: 5 });
 

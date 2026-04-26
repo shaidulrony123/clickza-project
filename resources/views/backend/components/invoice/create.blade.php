@@ -61,6 +61,11 @@
                     </div>
 
                     <div class="form-group-d">
+                        <label>Internal Cost</label>
+                        <input type="number" step="0.01" min="0" id="invoiceInternalCost" value="0">
+                    </div>
+
+                    <div class="form-group-d">
                         <label>Client Address</label>
                         <textarea id="invoiceClientAddress" rows="3" placeholder="Enter client address"></textarea>
                     </div>
@@ -81,6 +86,8 @@
                     <div class="invoice-summary-box">
                         <span>Subtotal: <strong id="invoiceSubtotalText">0.00</strong></span>
                         <span>Total: <strong id="invoiceTotalText">0.00</strong></span>
+                        <span>Cost: <strong id="invoiceInternalCostText">0.00</strong></span>
+                        <span>Profit: <strong id="invoiceProfitText">0.00</strong></span>
                     </div>
 
                     <button type="button" class="btn-primary-d" id="saveInvoiceBtn" onclick="invoiceCreate()">
@@ -155,13 +162,17 @@
 
         const discount = parseFloat(document.getElementById('invoiceDiscount').value || 0);
         const total = Math.max(subtotal - discount, 0);
+        const internalCost = parseFloat(document.getElementById('invoiceInternalCost').value || 0);
+        const profit = total - internalCost;
 
         document.getElementById('invoiceSubtotalText').textContent = subtotal.toFixed(2);
         document.getElementById('invoiceTotalText').textContent = total.toFixed(2);
+        document.getElementById('invoiceInternalCostText').textContent = internalCost.toFixed(2);
+        document.getElementById('invoiceProfitText').textContent = profit.toFixed(2);
     }
 
     document.addEventListener('input', function (event) {
-        if (event.target.matches('#invoiceItemsWrapper input, #invoiceDiscount')) {
+        if (event.target.matches('#invoiceItemsWrapper input, #invoiceDiscount, #invoiceInternalCost')) {
             recalculateInvoiceSummary();
         }
     });
@@ -186,6 +197,7 @@
                 due_date: document.getElementById('invoiceDueDate').value,
                 status: document.getElementById('invoiceStatus').value,
                 discount: document.getElementById('invoiceDiscount').value,
+                internal_cost: document.getElementById('invoiceInternalCost').value,
                 notes: document.getElementById('invoiceNotes').value.trim(),
                 items: collectInvoiceItems('#invoiceItemsWrapper'),
             };
@@ -218,6 +230,7 @@
                 document.getElementById('invoiceDueDate').value = '';
                 document.getElementById('invoiceStatus').value = 'draft';
                 document.getElementById('invoiceDiscount').value = '0';
+                document.getElementById('invoiceInternalCost').value = '0';
                 document.getElementById('invoiceNotes').value = '';
                 document.getElementById('invoiceItemsWrapper').innerHTML = '';
                 addInvoiceItemRow();

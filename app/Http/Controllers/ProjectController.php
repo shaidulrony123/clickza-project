@@ -24,7 +24,20 @@ class ProjectController extends Controller
     }
     // project create
     public function ProjectCreate(Request $request)
-{
+	{
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'required|string',
+        'teach_stacks' => 'required|array|min:1',
+        'teach_stacks.*' => 'required|string|max:255',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+        'project_link' => 'nullable|url',
+        'github_link' => 'nullable|url',
+        'category_id' => 'nullable|exists:categories,id',
+        'status' => 'required|in:live,dev,archived',
+        'views' => 'nullable|integer|min:0'
+    ]);
+
     $imagePath = null;
 
     if ($request->hasFile('image')) {
@@ -47,15 +60,15 @@ class ProjectController extends Controller
     }
 
     Project::create([
-        'title' => $request->title,
-        'description' => $request->description,
-        'teach_stack' => json_encode($request->teach_stacks),
+        'title' => $validated['title'],
+        'description' => $validated['description'],
+        'teach_stack' => json_encode($validated['teach_stacks']),
         'image' => $imagePath,
-        'project_link' => $request->project_link,
-        'github_link' => $request->github_link,
-        'category_id' => $request->category_id,
-        'status' => $request->status,
-        'views' => $request->views ?? 0,
+        'project_link' => $validated['project_link'] ?? null,
+        'github_link' => $validated['github_link'] ?? null,
+        'category_id' => $validated['category_id'] ?? null,
+        'status' => $validated['status'],
+        'views' => $validated['views'] ?? 0,
     ]);
 
     return response()->json([
@@ -109,12 +122,12 @@ public function ProjectUpdate(Request $request)
         'description' => 'required|string',
         'teach_stacks' => 'required|array|min:1',
         'teach_stacks.*' => 'required|string|max:255',
-        'image' => 'nullable|image|mimes:jpg,jpeg,png,webp',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
         'project_link' => 'nullable|url',
         'github_link' => 'nullable|url',
         'category_id' => 'nullable|exists:categories,id',
         'status' => 'required|in:live,dev,archived',
-        'views' => 'nullable|integer'
+        'views' => 'nullable|integer|min:0'
     ]);
 
     $project = Project::find($request->id);
@@ -170,16 +183,16 @@ public function ProjectDelete(Request $request)
         try {
             // Find the advertisement by ID
             $project = Project::find($request->input('id'));
-    
+
             if ($project) {
                 // Get the image path from the advertisement record
-                $imagePath = public_path($project->image);
-    
+                $imagePath = $project->image ? public_path($project->image) : null;
+
                 // Delete the image from the server if it exists
-                if (file_exists($imagePath)) {
+                if ($imagePath && file_exists($imagePath)) {
                     unlink($imagePath);
                 }
-    
+
                 // Delete the project record
                 $project->delete();
     
